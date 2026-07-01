@@ -569,8 +569,8 @@
       }
 
       /* ================================================================ */
-      /* ===== 手机横屏全屏适配（覆盖所有手机，电脑/平板不受影响） ===== */
-      @media (orientation: landscape) and (max-height: 600px) {
+      /* ===== 手机横屏全屏适配 ===== */
+      @media (orientation: landscape) and (max-width: 768px) {
         /* 隐藏顶部按钮组 */
         .btn-group {
           display: none !important;
@@ -592,7 +592,7 @@
           width: 100%;
           max-width: 100%;
           margin: 0;
-          padding: 4px 8px 6px;
+          padding: 6px 10px 8px;
           border-radius: 0;
           border: 1px solid #000;
           display: flex;
@@ -603,19 +603,19 @@
 
         /* 标题缩小 */
         .invoice-title {
-          font-size: 14px;
-          margin-bottom: 1px;
+          font-size: 16px;
+          margin-bottom: 2px;
         }
 
-        /* 店铺信息 → 强制一行显示 */
+        /* 店铺信息 → 一行显示 */
         .shop-info {
           flex-direction: row !important;
           justify-content: center;
-          font-size: 9px;
-          margin-bottom: 1px;
-          gap: 4px;
-          flex-wrap: nowrap;
-          line-height: 1.1;
+          font-size: 10px;
+          margin-bottom: 2px;
+          gap: 6px;
+          flex-wrap: wrap;
+          line-height: 1.2;
         }
         .shop-left {
           margin-right: 0;
@@ -624,9 +624,9 @@
         /* 顶部栏紧凑 */
         .top-bar {
           flex-wrap: nowrap;
-          gap: 3px;
-          margin: 2px 0;
-          font-size: 11px;
+          gap: 4px;
+          margin: 3px 0;
+          font-size: 12px;
         }
         .top-bar > div {
           flex: 1 1 0;
@@ -634,12 +634,12 @@
           gap: 2px;
         }
         .top-bar label {
-          min-width: 22px;
-          font-size: 10px;
+          min-width: 26px;
+          font-size: 11px;
         }
         .top-bar input {
-          padding: 2px 3px;
-          font-size: 11px;
+          padding: 3px 4px;
+          font-size: 12px;
           border-width: 1px;
           min-width: 0;
         }
@@ -649,26 +649,26 @@
           flex: 1 1 auto;
           overflow-y: auto;
           overflow-x: auto;
-          margin: 1px 0 1px;
+          margin: 2px 0 2px;
           min-height: 0;
         }
 
         .goods-table {
-          min-width: 380px;
-          font-size: 10px;
+          min-width: 400px;
+          font-size: 11px;
         }
         .goods-table th {
-          padding: 1px 2px;
-          font-size: 9px;
+          padding: 2px 2px;
+          font-size: 10px;
         }
         .goods-table td {
-          padding: 1px 2px;
+          padding: 2px 2px;
           border-width: 1px;
         }
         .goods-table td input {
-          padding: 1px 2px;
-          font-size: 11px;
-          min-width: 24px;
+          padding: 2px 2px;
+          font-size: 12px;
+          min-width: 28px;
         }
 
         /* 合计区域 */
@@ -677,27 +677,27 @@
           flex-direction: row;
           flex-wrap: wrap;
           justify-content: flex-end;
-          gap: 2px 8px;
+          gap: 3px 10px;
           margin: 1px 0;
-          font-size: 11px;
+          font-size: 12px;
         }
         .total-area input {
-          padding: 1px 3px;
-          font-size: 11px;
-          min-width: 60px;
+          padding: 2px 4px;
+          font-size: 12px;
+          min-width: 70px;
           width: auto;
           flex: 0 1 auto;
         }
 
         .separator {
-          margin: 2px 0;
+          margin: 3px 0;
         }
 
         .remark {
           flex: 0 0 auto;
-          font-size: 8px;
-          margin: 1px 0 1px;
-          line-height: 1.1;
+          font-size: 9px;
+          margin: 1px 0 2px;
+          line-height: 1.2;
         }
 
         .sign-area {
@@ -705,9 +705,9 @@
           flex-direction: row;
           flex-wrap: wrap;
           justify-content: space-between;
-          font-size: 10px;
-          margin-top: 1px;
-          gap: 1px;
+          font-size: 11px;
+          margin-top: 2px;
+          gap: 2px;
         }
 
         /* 仓库弹窗内调整 */

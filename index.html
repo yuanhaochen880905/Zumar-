@@ -1,0 +1,1586 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover"
+    />
+    <title>广州优玛商贸商行 - 开单系统</title>
+    <style>
+      /* ===== 全局重置 ===== */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family:
+          "Microsoft YaHei",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          Helvetica,
+          Arial,
+          sans-serif;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #f4f4f4;
+      }
+
+      /* ===== 竖屏提示遮罩 ===== */
+      #rotate-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #1a1a2e;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 99999;
+        color: white;
+        text-align: center;
+        padding: 40px;
+      }
+      #rotate-overlay.show {
+        display: flex;
+      }
+      #rotate-overlay .icon {
+        font-size: 60px;
+        margin-bottom: 20px;
+        animation: rotate-phone 2s ease-in-out infinite;
+      }
+      #rotate-overlay h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+      }
+      #rotate-overlay p {
+        font-size: 16px;
+        opacity: 0.7;
+        max-width: 300px;
+      }
+      @keyframes rotate-phone {
+        0%,
+        100% {
+          transform: rotate(0deg);
+        }
+        50% {
+          transform: rotate(90deg);
+        }
+      }
+
+      /* ===== 主容器 - 横屏专用 ===== */
+      #app {
+        display: none;
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        padding: 10px 14px 30px;
+        background: #f4f4f4;
+      }
+      #app.active {
+        display: block;
+      }
+
+      /* 横屏时内容自动撑开，可滚动 */
+      @media (orientation: landscape) {
+        #rotate-overlay {
+          display: none !important;
+        }
+        #app {
+          display: block !important;
+        }
+      }
+
+      /* 竖屏时显示提示，隐藏主内容 */
+      @media (orientation: portrait) {
+        #rotate-overlay {
+          display: flex !important;
+        }
+        #app {
+          display: none !important;
+        }
+      }
+
+      /* ===== 单据样式 (打印区域) ===== */
+      .invoice {
+        width: 100%;
+        max-width: 210mm;
+        margin: 0 auto;
+        background: white;
+        padding: 12px 14px;
+        border: 1px solid #000;
+        line-height: 1.4;
+        border-radius: 4px;
+      }
+
+      .invoice-title {
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 6px;
+      }
+
+      .shop-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 14px;
+        margin-bottom: 8px;
+        flex-wrap: wrap;
+        text-align: center;
+      }
+
+      .top-bar {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 10px 0;
+        font-size: 16px;
+      }
+      .top-bar > div {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex: 1 0 30%;
+        min-width: 140px;
+      }
+      .top-bar label {
+        min-width: 50px;
+        font-weight: 500;
+        flex-shrink: 0;
+      }
+      .top-bar input {
+        flex: 1;
+        padding: 8px 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        min-width: 0;
+        width: 100%;
+        background: white;
+      }
+
+      /* 表格容器 – 水平滚动 */
+      .table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 10px 0;
+      }
+
+      .goods-table {
+        width: 100%;
+        min-width: 520px;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+      .goods-table th,
+      .goods-table td {
+        border: 1px solid #000;
+        padding: 6px 4px;
+        text-align: center;
+        white-space: nowrap;
+      }
+      .goods-table th {
+        background: #f0f0f0;
+        font-weight: 600;
+      }
+      .goods-table td input {
+        width: 100%;
+        min-width: 50px;
+        border: none;
+        outline: none;
+        text-align: center;
+        padding: 6px 2px;
+        background: transparent;
+        font-size: 16px;
+      }
+      .goods-table td input[type="number"] {
+        -moz-appearance: textfield;
+      }
+      .goods-table td input::-webkit-outer-spin-button,
+      .goods-table td input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      .total-area {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 12px;
+        margin: 8px 0 0;
+        font-size: 16px;
+      }
+      .total-area > div {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .total-area input {
+        flex: 1;
+        padding: 8px 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background: #f9f9f9;
+        min-width: 120px;
+      }
+
+      .separator {
+        border: none;
+        border-top: 1px solid #000;
+        margin: 10px 0;
+      }
+
+      .remark {
+        font-size: 12px;
+        margin: 6px 0 8px;
+        line-height: 1.5;
+      }
+
+      .sign-area {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 6px;
+        margin-top: 10px;
+        font-size: 16px;
+      }
+
+      /* ===== 按钮区 ===== */
+      .btn-group {
+        text-align: center;
+        margin: 12px 0 16px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+      }
+      .btn-group button {
+        padding: 12px 22px;
+        font-size: 18px;
+        flex: 1 0 auto;
+        min-width: 100px;
+        max-width: 160px;
+        background: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        touch-action: manipulation;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: background 0.2s;
+        font-weight: 500;
+      }
+      .btn-group button:active {
+        opacity: 0.7;
+        transform: scale(0.97);
+      }
+      .btn-group button.btn-warehouse {
+        background: #16a34a;
+      }
+      .btn-group button.btn-warehouse:hover {
+        background: #15803d;
+      }
+
+      /* ===== 模态框通用 ===== */
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        padding: 10px;
+      }
+      .modal.show {
+        display: flex;
+      }
+
+      .modal-content {
+        background: white;
+        padding: 16px;
+        width: 100%;
+        max-width: 1100px;
+        max-height: 92vh;
+        border-radius: 12px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #e5e7eb;
+        flex-shrink: 0;
+      }
+      .modal-header h2 {
+        font-size: 20px;
+      }
+      .modal-header .close-btn {
+        font-size: 32px;
+        cursor: pointer;
+        color: #6b7280;
+        background: none;
+        border: none;
+        line-height: 1;
+        padding: 0 8px;
+      }
+      .modal-header .close-btn:hover {
+        color: #111827;
+      }
+
+      .modal-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 12px 0 0 0;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      /* ===== 仓库弹窗 ===== */
+      .warehouse-search {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 16px;
+        align-items: center;
+      }
+      .warehouse-search input,
+      .warehouse-search select {
+        padding: 10px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 16px;
+        background: white;
+        flex: 1 1 140px;
+        min-width: 100px;
+      }
+      .warehouse-search .upload-btn {
+        padding: 10px 18px;
+        background: #f59e0b;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 500;
+        flex: 0 0 auto;
+        touch-action: manipulation;
+      }
+      .warehouse-search .upload-btn:active {
+        opacity: 0.7;
+        transform: scale(0.97);
+      }
+      .warehouse-search .search-hint {
+        font-size: 14px;
+        color: #6b7280;
+        white-space: nowrap;
+      }
+
+      .warehouse-table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 8px 0;
+      }
+
+      .warehouse-table {
+        width: 100%;
+        min-width: 520px;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+      .warehouse-table th,
+      .warehouse-table td {
+        padding: 10px 6px;
+        border-bottom: 1px solid #e5e7eb;
+        text-align: left;
+        white-space: nowrap;
+      }
+      .warehouse-table th {
+        background: #f9fafb;
+        font-weight: 600;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+      .warehouse-table .col-no {
+        min-width: 80px;
+      }
+      .warehouse-table .col-customer {
+        min-width: 80px;
+      }
+      .warehouse-table .col-date {
+        min-width: 100px;
+      }
+      .warehouse-table .col-total {
+        min-width: 70px;
+        text-align: right;
+      }
+      .warehouse-table .col-action {
+        min-width: 170px;
+        text-align: center;
+      }
+
+      .warehouse-table .btn-view,
+      .warehouse-table .btn-upload,
+      .warehouse-table .btn-del {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        touch-action: manipulation;
+        margin: 0 2px;
+      }
+      .warehouse-table .btn-view {
+        background: #2563eb;
+        color: white;
+      }
+      .warehouse-table .btn-upload {
+        background: #f59e0b;
+        color: white;
+      }
+      .warehouse-table .btn-del {
+        background: #ef4444;
+        color: white;
+      }
+      .warehouse-table .btn-view:active,
+      .warehouse-table .btn-upload:active,
+      .warehouse-table .btn-del:active {
+        opacity: 0.6;
+        transform: scale(0.95);
+      }
+
+      .empty-warehouse {
+        text-align: center;
+        padding: 40px 0;
+        color: #9ca3af;
+        font-size: 16px;
+      }
+
+      /* ===== 查看详情弹窗 ===== */
+      .detail-invoice {
+        padding: 10px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        background: #fafafa;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      .detail-invoice .d-title {
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 4px;
+      }
+      .detail-invoice .d-shop {
+        text-align: center;
+        font-size: 13px;
+        margin-bottom: 6px;
+      }
+      .detail-invoice .d-top {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 8px;
+        font-size: 14px;
+        margin: 6px 0;
+      }
+      .detail-invoice .d-top span {
+        margin-right: 12px;
+      }
+      .detail-invoice table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 6px 0;
+        font-size: 13px;
+        min-width: 300px;
+      }
+      .detail-invoice table th,
+      .detail-invoice table td {
+        border: 1px solid #000;
+        padding: 4px 6px;
+        text-align: center;
+        white-space: nowrap;
+      }
+      .detail-invoice .d-total {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 16px;
+        margin: 4px 0;
+        font-size: 14px;
+      }
+      .detail-invoice .d-remark {
+        font-size: 12px;
+        margin: 4px 0;
+      }
+      .detail-invoice .d-sign {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 4px;
+        margin-top: 8px;
+        font-size: 13px;
+      }
+      .detail-invoice .d-images {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 8px;
+      }
+      .detail-invoice .d-images img {
+        max-height: 150px;
+        max-width: 100%;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        object-fit: contain;
+      }
+
+      /* ===== 设置弹窗 ===== */
+      .modal-setting .modal-content {
+        max-width: 500px;
+      }
+      .modal-setting input {
+        width: 100%;
+        padding: 10px;
+        margin: 4px 0 12px 0;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 16px;
+      }
+      .modal-setting label {
+        font-weight: 500;
+        font-size: 15px;
+      }
+
+      /* ===== 打印样式 ===== */
+      @media print {
+        body * {
+          visibility: hidden;
+        }
+        .invoice,
+        .invoice * {
+          visibility: visible;
+        }
+        .invoice {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          border: none;
+          padding: 10px 16px;
+        }
+        .btn-group,
+        .btn-group *,
+        .modal,
+        .modal *,
+        #rotate-overlay,
+        #rotate-overlay * {
+          display: none !important;
+        }
+        .goods-table td input {
+          border: none !important;
+          background: transparent !important;
+        }
+        .total-area input {
+          border: none !important;
+          background: transparent !important;
+        }
+        .top-bar input {
+          border: none !important;
+          background: transparent !important;
+        }
+        #warehouseModal,
+        #detailModal,
+        #settingModal {
+          display: none !important;
+        }
+        .table-wrap {
+          overflow: visible !important;
+        }
+        .goods-table {
+          min-width: auto !important;
+        }
+        #app {
+          display: block !important;
+          overflow: visible !important;
+        }
+        #rotate-overlay {
+          display: none !important;
+        }
+      }
+
+      /* ===== 横屏滚动优化 ===== */
+      #app {
+        scroll-behavior: smooth;
+      }
+      #app::-webkit-scrollbar {
+        width: 4px;
+        background: transparent;
+      }
+      #app::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 4px;
+      }
+
+      /* 横屏时按钮更紧凑 */
+      @media (orientation: landscape) and (max-height: 500px) {
+        .btn-group button {
+          padding: 8px 14px;
+          font-size: 15px;
+          min-width: 80px;
+        }
+        .top-bar input {
+          padding: 5px 8px;
+          font-size: 14px;
+        }
+        .goods-table td input {
+          padding: 4px 2px;
+          font-size: 14px;
+        }
+        .invoice {
+          padding: 8px 12px;
+        }
+        .btn-group {
+          margin: 6px 0 10px;
+          gap: 6px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ===== 竖屏旋转提示 ===== -->
+    <div id="rotate-overlay">
+      <div class="icon">📱</div>
+      <h2>请旋转手机</h2>
+      <p>将手机横屏使用，获得最佳开单体验</p>
+    </div>
+
+    <!-- ===== 主应用（横屏） ===== -->
+    <div id="app">
+      <!-- ===== 按钮区 ===== -->
+      <div class="btn-group">
+        <button onclick="doPrint()">🖨️ 打印</button>
+        <button onclick="resetInvoice()">🗑️ 清空</button>
+        <button onclick="openSetting()">⚙️ 设置</button>
+        <button class="btn-warehouse" onclick="openWarehouse()">📦 仓库</button>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- ===== 单据主体 ===== -->
+      <div class="invoice" id="invoice">
+        <div class="invoice-title" id="shopName">广州优玛商贸商行(销售单)</div>
+
+        <div class="shop-info">
+          <div class="shop-left" id="shopLeft">
+            广州店：广州南沙环盛街2号, 电话：020-81335099,手机：13360559947
+          </div>
+          <div class="shop-right" id="shopRight">
+            仓库：广州市海珠区中大外围开发区0506档, 手机：19320546394
+          </div>
+        </div>
+
+        <div class="top-bar">
+          <div>
+            <label>顾客</label>
+            <input type="text" id="customer" placeholder="填写顾客姓名" />
+          </div>
+          <div>
+            <label>日期</label>
+            <input type="text" id="billDate" value="2026年 月 日" />
+          </div>
+          <div>
+            <label>编号</label>
+            <input type="text" id="billNo" value="C000" />
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="goods-table">
+            <thead>
+              <tr>
+                <th>名称</th>
+                <th>数量(码)</th>
+                <th>单价</th>
+                <th>金额</th>
+                <th>备注</th>
+              </tr>
+            </thead>
+            <tbody id="goodsBody">
+              <tr>
+                <td><input type="text" class="pname" placeholder="" /></td>
+                <td>
+                  <input
+                    type="number"
+                    class="pqty"
+                    value="1"
+                    oninput="calc()"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    class="pprice"
+                    value="0"
+                    oninput="calc()"
+                  />
+                </td>
+                <td><input type="text" class="ptotal" readonly /></td>
+                <td><input type="text" class="premark" /></td>
+              </tr>
+              <tr>
+                <td><input type="text" class="pname" placeholder="" /></td>
+                <td>
+                  <input
+                    type="number"
+                    class="pqty"
+                    value="1"
+                    oninput="calc()"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    class="pprice"
+                    value="0"
+                    oninput="calc()"
+                  />
+                </td>
+                <td><input type="text" class="ptotal" readonly /></td>
+                <td><input type="text" class="premark" /></td>
+              </tr>
+              <tr>
+                <td><input type="text" class="pname" placeholder="" /></td>
+                <td>
+                  <input
+                    type="number"
+                    class="pqty"
+                    value="1"
+                    oninput="calc()"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    class="pprice"
+                    value="0"
+                    oninput="calc()"
+                  />
+                </td>
+                <td><input type="text" class="ptotal" readonly /></td>
+                <td><input type="text" class="premark" /></td>
+              </tr>
+              <tr>
+                <td><input type="text" class="pname" placeholder="" /></td>
+                <td>
+                  <input
+                    type="number"
+                    class="pqty"
+                    value="1"
+                    oninput="calc()"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    class="pprice"
+                    value="0"
+                    oninput="calc()"
+                  />
+                </td>
+                <td><input type="text" class="ptotal" readonly /></td>
+                <td><input type="text" class="premark" /></td>
+              </tr>
+              <tr>
+                <td><input type="text" class="pname" placeholder="" /></td>
+                <td>
+                  <input
+                    type="number"
+                    class="pqty"
+                    value="1"
+                    oninput="calc()"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    class="pprice"
+                    value="0"
+                    oninput="calc()"
+                  />
+                </td>
+                <td><input type="text" class="ptotal" readonly /></td>
+                <td><input type="text" class="premark" /></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="total-area">
+          <div>
+            <span>合计（大写）</span>
+            <input type="text" id="upperTotal" readonly />
+          </div>
+          <div>
+            <span>小写 ¥</span>
+            <input type="text" id="totalMoney" readonly />
+          </div>
+        </div>
+
+        <hr class="separator" />
+
+        <div class="remark" id="remarkText">
+          注:本商行产品如有发生质量问题,请贵司在收到货当日核对颜色,经验收三天内通知本行.经本行查实,退回购货款.其它杂费不做赔偿
+          (如经加工和裁剪,本行概不负责!)否则超过时间后果自负。
+        </div>
+
+        <div class="sign-area">
+          <div>制单：<span id="signMakerDisplay">____________</span></div>
+          <div>厂家签名：<span id="signFactoryDisplay">____________</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- ===== 仓库弹窗 ===== -->
+    <div class="modal" id="warehouseModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>📦 单据仓库</h2>
+          <button class="close-btn" onclick="closeWarehouse()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="warehouse-search">
+            <input
+              type="text"
+              id="warehouseSearch"
+              placeholder="🔍 搜索编号 / 顾客 / 日期..."
+              oninput="renderWarehouse()"
+            />
+            <select id="yearFilter" onchange="renderWarehouse()">
+              <option value="">全部年份</option>
+            </select>
+            <select id="monthFilter" onchange="renderWarehouse()">
+              <option value="">全部月份</option>
+              <option value="1">1月</option>
+              <option value="2">2月</option>
+              <option value="3">3月</option>
+              <option value="4">4月</option>
+              <option value="5">5月</option>
+              <option value="6">6月</option>
+              <option value="7">7月</option>
+              <option value="8">8月</option>
+              <option value="9">9月</option>
+              <option value="10">10月</option>
+              <option value="11">11月</option>
+              <option value="12">12月</option>
+            </select>
+            <button class="upload-btn" onclick="uploadImageToWarehouse()">
+              📷 上传图片
+            </button>
+            <span class="search-hint"
+              >共 <span id="totalCount">0</span> 条</span
+            >
+          </div>
+          <div class="warehouse-table-wrap">
+            <div id="warehouseList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- ===== 查看详情弹窗 ===== -->
+    <div class="modal" id="detailModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>📄 单据详情</h2>
+          <button class="close-btn" onclick="closeDetail()">&times;</button>
+        </div>
+        <div class="modal-body" id="detailBody"></div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- ===== 店铺设置弹窗 ===== -->
+    <div class="modal modal-setting" id="settingModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>⚙️ 店铺信息设置</h2>
+          <button class="close-btn" onclick="closeSetting()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <label>店铺名称：</label>
+          <input
+            type="text"
+            id="setShopName"
+            value="广州优玛商贸商行(销售单)"
+          />
+
+          <label>广州店信息：</label>
+          <input
+            type="text"
+            id="setLeft"
+            value="广州店：广州南沙环盛街2号, 电话：020-81335099,手机：13360559947"
+          />
+
+          <label>仓库/分店信息：</label>
+          <input
+            type="text"
+            id="setRight"
+            value="仓库：广州市海珠区中大外围开发区0506档, 手机：19320546394"
+          />
+
+          <br />
+          <button
+            onclick="saveSetting()"
+            style="
+              background: #2563eb;
+              color: #fff;
+              border: none;
+              padding: 10px 28px;
+              border-radius: 6px;
+              cursor: pointer;
+              font-size: 16px;
+              touch-action: manipulation;
+            "
+          >
+            保存
+          </button>
+          <button
+            onclick="closeSetting()"
+            style="
+              background: #9ca3af;
+              color: #fff;
+              border: none;
+              padding: 10px 28px;
+              border-radius: 6px;
+              cursor: pointer;
+              font-size: 16px;
+              margin-left: 8px;
+              touch-action: manipulation;
+            "
+          >
+            取消
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <script>
+      // =============================================================
+      //  API 基础地址
+      // =============================================================
+      const API_BASE = "http://localhost:3000/api";
+
+      // =============================================================
+      //  1. 工具函数
+      // =============================================================
+
+      function digitToUppercase(amount) {
+        if (amount === 0 || isNaN(amount) || amount === "") return "零元整";
+        const n = Math.floor(Number(amount));
+        if (n === 0) return "零元整";
+        const digits = [
+          "零",
+          "壹",
+          "贰",
+          "叁",
+          "肆",
+          "伍",
+          "陆",
+          "柒",
+          "捌",
+          "玖",
+        ];
+        const units = ["", "拾", "佰", "仟"];
+        const bigUnits = ["", "万", "亿"];
+        let str = n.toString();
+        let groups = [];
+        while (str.length > 0) {
+          groups.unshift(str.slice(-4));
+          str = str.slice(0, -4);
+        }
+        let result = "";
+        for (let i = 0; i < groups.length; i++) {
+          let g = groups[i];
+          let part = "";
+          for (let j = 0; j < g.length; j++) {
+            let d = parseInt(g[j]);
+            if (d !== 0) {
+              part += digits[d] + units[g.length - 1 - j];
+            } else if (j < g.length - 1) {
+              part += "零";
+            }
+          }
+          part = part.replace(/零+/g, "零");
+          if (part.endsWith("零")) part = part.slice(0, -1);
+          if (part) result += part + bigUnits[groups.length - 1 - i];
+        }
+        result = result.replace(/零+/g, "零");
+        if (result.endsWith("零")) result = result.slice(0, -1);
+        return result + "元整";
+      }
+
+      function getNowDateStr() {
+        const d = new Date();
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, "0");
+        const day = String(d.getDate()).padStart(2, "0");
+        return y + "-" + m + "-" + day;
+      }
+
+      function genId() {
+        return (
+          Date.now().toString(36) +
+          "-" +
+          Math.random().toString(36).substr(2, 6)
+        );
+      }
+
+      function escapeHtml(str) {
+        if (!str) return "";
+        return str
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      // =============================================================
+      //  2. 计算金额
+      // =============================================================
+
+      function calc() {
+        const rows = document.querySelectorAll("#goodsBody tr");
+        let total = 0;
+        rows.forEach((tr) => {
+          const qty = parseFloat(tr.querySelector(".pqty").value) || 0;
+          const price = parseFloat(tr.querySelector(".pprice").value) || 0;
+          const sub = qty * price;
+          tr.querySelector(".ptotal").value = sub.toFixed(2);
+          total += sub;
+        });
+        total = Math.round(total);
+        document.getElementById("totalMoney").value = total.toString();
+        document.getElementById("upperTotal").value = digitToUppercase(total);
+      }
+
+      // =============================================================
+      //  3. 收集当前单据数据
+      // =============================================================
+
+      function collectInvoiceData() {
+        const rows = document.querySelectorAll("#goodsBody tr");
+        const goods = [];
+        rows.forEach((tr) => {
+          goods.push({
+            name: tr.querySelector(".pname").value || "",
+            qty: parseFloat(tr.querySelector(".pqty").value) || 0,
+            price: parseFloat(tr.querySelector(".pprice").value) || 0,
+            total: parseFloat(tr.querySelector(".ptotal").value) || 0,
+            remark: tr.querySelector(".premark").value || "",
+          });
+        });
+
+        return {
+          id: genId(),
+          shopName: document.getElementById("shopName").innerText,
+          shopLeft: document.getElementById("shopLeft").innerText,
+          shopRight: document.getElementById("shopRight").innerText,
+          customer: document.getElementById("customer").value || "",
+          billDate: document.getElementById("billDate").value || "",
+          billNo: document.getElementById("billNo").value || "",
+          goods: goods,
+          totalMoney: document.getElementById("totalMoney").value || "0",
+          upperTotal: document.getElementById("upperTotal").value || "零元整",
+          remark: document.getElementById("remarkText").innerText || "",
+          signMaker:
+            document.getElementById("signMakerDisplay").innerText ||
+            "____________",
+          signFactory:
+            document.getElementById("signFactoryDisplay").innerText ||
+            "____________",
+          createTime: new Date().toISOString(),
+          images: [],
+        };
+      }
+
+      // =============================================================
+      //  4. 仓库 API 操作
+      // =============================================================
+
+      async function getWarehouse(year, month) {
+        let url = API_BASE + "/invoices";
+        if (year && month) url += `?year=${year}&month=${month}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("获取数据失败");
+        return await res.json();
+      }
+
+      async function saveToWarehouse(invoice) {
+        const res = await fetch(API_BASE + "/invoices", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(invoice),
+        });
+        if (!res.ok) throw new Error("保存失败");
+        return await res.json();
+      }
+
+      async function deleteFromWarehouse(id) {
+        const res = await fetch(API_BASE + "/invoices/" + id, {
+          method: "DELETE",
+        });
+        if (!res.ok) throw new Error("删除失败");
+        renderWarehouse();
+      }
+
+      async function clearAllWarehouse() {
+        if (!confirm("确定要清空所有仓库记录吗？")) return;
+        const list = await getWarehouse();
+        for (let item of list) {
+          await deleteFromWarehouse(item.id);
+        }
+        renderWarehouse();
+      }
+
+      async function viewDetail(id) {
+        const res = await fetch(API_BASE + "/invoices/" + id);
+        if (!res.ok) return alert("单据不存在");
+        const item = await res.json();
+        renderDetail(item);
+        document.getElementById("detailModal").classList.add("show");
+      }
+
+      async function uploadImage(file, invoiceId) {
+        const formData = new FormData();
+        formData.append("image", file);
+        const res = await fetch("http://localhost:3000/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+        if (!res.ok) throw new Error("上传失败");
+        const result = await res.json();
+        const invoiceRes = await fetch(API_BASE + "/invoices/" + invoiceId);
+        if (!invoiceRes.ok) throw new Error("获取单据失败");
+        const invoice = await invoiceRes.json();
+        if (!invoice.images) invoice.images = [];
+        invoice.images.push(result.path);
+        const updateRes = await fetch(API_BASE + "/invoices/" + invoiceId, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(invoice),
+        });
+        if (!updateRes.ok) throw new Error("更新单据失败");
+        renderWarehouse();
+      }
+
+      function uploadScreenshot(id) {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*";
+        input.onchange = async (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+          try {
+            await uploadImage(file, id);
+            alert("✅ 截图上传成功！");
+          } catch (err) {
+            alert("上传失败：" + err.message);
+          }
+        };
+        input.click();
+      }
+
+      function uploadImageToWarehouse() {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*";
+        input.multiple = true;
+        input.onchange = async (e) => {
+          const files = e.target.files;
+          if (!files || files.length === 0) return;
+          const remark = prompt("请输入备注说明（可选）：", "上传单据图片");
+          if (remark === null) return;
+          try {
+            const emptyInvoice = {
+              id: genId(),
+              shopName:
+                document.getElementById("shopName").innerText || "图片上传",
+              shopLeft: document.getElementById("shopLeft").innerText || "",
+              shopRight: document.getElementById("shopRight").innerText || "",
+              customer: "图片上传",
+              billDate: getNowDateStr(),
+              billNo:
+                "IMG-" +
+                new Date().toISOString().slice(0, 10).replace(/-/g, ""),
+              goods: [],
+              totalMoney: "0",
+              upperTotal: "零元整",
+              remark: remark || "图片上传",
+              signMaker: "系统",
+              signFactory: "系统",
+              createTime: new Date().toISOString(),
+              images: [],
+            };
+            const saved = await saveToWarehouse(emptyInvoice);
+            for (let file of files) {
+              const formData = new FormData();
+              formData.append("image", file);
+              const uploadRes = await fetch(
+                "http://localhost:3000/api/upload",
+                {
+                  method: "POST",
+                  body: formData,
+                },
+              );
+              if (!uploadRes.ok) throw new Error(`上传 ${file.name} 失败`);
+              const result = await uploadRes.json();
+              const invoiceRes = await fetch(
+                API_BASE + "/invoices/" + saved.id,
+              );
+              if (!invoiceRes.ok) throw new Error("获取单据失败");
+              const invoice = await invoiceRes.json();
+              if (!invoice.images) invoice.images = [];
+              invoice.images.push(result.path);
+              const updateRes = await fetch(
+                API_BASE + "/invoices/" + saved.id,
+                {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(invoice),
+                },
+              );
+              if (!updateRes.ok) throw new Error("更新单据失败");
+            }
+            alert(`✅ 成功上传 ${files.length} 张图片到仓库！`);
+            renderWarehouse();
+          } catch (err) {
+            alert("上传失败：" + err.message);
+          }
+        };
+        input.click();
+      }
+
+      // =============================================================
+      //  5. 渲染仓库列表
+      // =============================================================
+
+      async function renderWarehouse() {
+        const keyword = document
+          .getElementById("warehouseSearch")
+          .value.trim()
+          .toLowerCase();
+        const year = document.getElementById("yearFilter").value;
+        const month = document.getElementById("monthFilter").value;
+
+        let list = await getWarehouse(year, month);
+
+        if (keyword) {
+          list = list.filter((item) => {
+            const no = (item.billNo || "").toLowerCase();
+            const cus = (item.customer || "").toLowerCase();
+            const date = (item.billDate || "").toLowerCase();
+            const remark = (item.remark || "").toLowerCase();
+            return (
+              no.includes(keyword) ||
+              cus.includes(keyword) ||
+              date.includes(keyword) ||
+              remark.includes(keyword)
+            );
+          });
+        }
+
+        document.getElementById("totalCount").textContent = list.length;
+
+        const container = document.getElementById("warehouseList");
+        if (list.length === 0) {
+          container.innerHTML = `<div class="empty-warehouse">📭 暂无单据记录<br><span style="font-size:13px;color:#9ca3af;">点击「上传图片」可直接上传图片</span></div>`;
+          return;
+        }
+
+        let html = `
+          <table class="warehouse-table">
+            <thead>
+              <tr>
+                <th class="col-no">编号</th>
+                <th class="col-customer">顾客/备注</th>
+                <th class="col-date">日期</th>
+                <th class="col-total">合计 (¥)</th>
+                <th class="col-action">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+        list.forEach((item) => {
+          const total = item.totalMoney || "0";
+          const displayName = item.customer || item.remark || "-";
+          html += `
+            <tr>
+              <td><strong>${escapeHtml(item.billNo || "-")}</strong></td>
+              <td>${escapeHtml(displayName)}</td>
+              <td>${escapeHtml(item.billDate || "-")}</td>
+              <td style="text-align:right;">${total}</td>
+              <td style="text-align:center;">
+                <button class="btn-view" onclick="viewDetail('${item.id}')">查看</button>
+                <button class="btn-upload" onclick="uploadScreenshot('${item.id}')">📷</button>
+                <button class="btn-del" onclick="deleteFromWarehouse('${item.id}')">删除</button>
+              </td>
+            </tr>
+          `;
+        });
+        html += `</tbody></table>`;
+        html += `<div style="margin-top:12px;text-align:right;font-size:13px;color:#9ca3af;">
+          共 ${list.length} 条记录
+          <button onclick="clearAllWarehouse()" style="margin-left:16px;background:#ef4444;color:#fff;border:none;padding:6px 14px;border-radius:4px;cursor:pointer;font-size:14px;touch-action:manipulation;">清空全部</button>
+        </div>`;
+        container.innerHTML = html;
+      }
+
+      // =============================================================
+      //  6. 查看详情（含图片）
+      // =============================================================
+
+      function renderDetail(item) {
+        const container = document.getElementById("detailBody");
+        let goodsHtml = "";
+        if (item.goods && item.goods.length > 0) {
+          goodsHtml = `
+            <table>
+              <thead><tr><th>名称</th><th>数量(码)</th><th>单价</th><th>金额</th><th>备注</th></tr></thead>
+              <tbody>
+          `;
+          item.goods.forEach((g) => {
+            goodsHtml += `
+              <tr>
+                <td>${escapeHtml(g.name || "")}</td>
+                <td>${g.qty || 0}</td>
+                <td>${g.price || 0}</td>
+                <td>${(g.total || 0).toFixed(2)}</td>
+                <td>${escapeHtml(g.remark || "")}</td>
+              </tr>
+            `;
+          });
+          goodsHtml += `</tbody></table>`;
+        } else {
+          goodsHtml = `<p style="text-align:center;color:#9ca3af;">无商品数据（纯图片记录）</p>`;
+        }
+
+        let imagesHtml = "";
+        if (item.images && item.images.length) {
+          imagesHtml = `<div class="d-images">`;
+          item.images.forEach((img) => {
+            imagesHtml += `<img src="http://localhost:3000${img}" alt="截图" />`;
+          });
+          imagesHtml += `</div>`;
+        } else {
+          imagesHtml = `<p style="color:#9ca3af;font-size:13px;">暂无图片</p>`;
+        }
+
+        const html = `
+          <div class="detail-invoice">
+            <div class="d-title">${escapeHtml(item.shopName || "图片记录")}</div>
+            <div class="d-shop">${escapeHtml(item.shopLeft || "")}<br>${escapeHtml(item.shopRight || "")}</div>
+            <div class="d-top">
+              <span><strong>顾客/备注：</strong>${escapeHtml(item.customer || item.remark || "-")}</span>
+              <span><strong>日期：</strong>${escapeHtml(item.billDate || "")}</span>
+              <span><strong>编号：</strong>${escapeHtml(item.billNo || "")}</span>
+            </div>
+            ${goodsHtml}
+            <div class="d-total">
+              <span><strong>大写：</strong>${escapeHtml(item.upperTotal || "零元整")}</span>
+              <span><strong>小写：</strong>¥ ${escapeHtml(item.totalMoney || "0")}</span>
+            </div>
+            <hr style="border-top:1px solid #000;margin:8px 0;">
+            <div class="d-remark"><strong>备注：</strong>${escapeHtml(item.remark || "")}</div>
+            <div style="margin-top:6px;"><strong>📷 图片：</strong></div>
+            ${imagesHtml}
+            <div class="d-sign">
+              <span>制单：${escapeHtml(item.signMaker || "____________")}</span>
+              <span>厂家签名：${escapeHtml(item.signFactory || "____________")}</span>
+            </div>
+            <div style="margin-top:8px;text-align:right;font-size:12px;color:#9ca3af;border-top:1px solid #e5e7eb;padding-top:6px;">
+              存档时间：${escapeHtml(new Date(item.createTime).toLocaleString())}
+            </div>
+          </div>
+        `;
+        container.innerHTML = html;
+      }
+
+      function closeDetail() {
+        document.getElementById("detailModal").classList.remove("show");
+      }
+
+      // =============================================================
+      //  7. 仓库弹窗控制
+      // =============================================================
+
+      async function openWarehouse() {
+        document.getElementById("warehouseModal").classList.add("show");
+        const yearSelect = document.getElementById("yearFilter");
+        const currentYear = new Date().getFullYear();
+        yearSelect.innerHTML = `<option value="">全部年份</option>`;
+        for (let y = currentYear; y >= 2020; y--) {
+          yearSelect.innerHTML += `<option value="${y}">${y}年</option>`;
+        }
+        await renderWarehouse();
+      }
+
+      function closeWarehouse() {
+        document.getElementById("warehouseModal").classList.remove("show");
+      }
+
+      // =============================================================
+      //  8. 设置弹窗控制
+      // =============================================================
+
+      function openSetting() {
+        document.getElementById("setShopName").value =
+          document.getElementById("shopName").innerText;
+        document.getElementById("setLeft").value =
+          document.getElementById("shopLeft").innerText;
+        document.getElementById("setRight").value =
+          document.getElementById("shopRight").innerText;
+        document.getElementById("settingModal").classList.add("show");
+      }
+
+      function closeSetting() {
+        document.getElementById("settingModal").classList.remove("show");
+      }
+
+      function saveSetting() {
+        document.getElementById("shopName").innerText =
+          document.getElementById("setShopName").value ||
+          "广州优玛商贸商行(销售单)";
+        document.getElementById("shopLeft").innerText =
+          document.getElementById("setLeft").value || "";
+        document.getElementById("shopRight").innerText =
+          document.getElementById("setRight").value || "";
+        closeSetting();
+      }
+
+      // =============================================================
+      //  9. 打印 + 自动存档
+      // =============================================================
+
+      async function doPrint() {
+        closeWarehouse();
+        closeDetail();
+        closeSetting();
+        calc();
+        const data = collectInvoiceData();
+        try {
+          await saveToWarehouse(data);
+          console.log("✅ 单据已存档");
+        } catch (err) {
+          alert("存档失败：" + err.message);
+          return;
+        }
+        window.print();
+      }
+
+      // =============================================================
+      //  10. 重置单据
+      // =============================================================
+
+      async function resetInvoice() {
+        if (!confirm("确定要清空当前单据内容吗？")) return;
+        document.getElementById("customer").value = "";
+        document.getElementById("billDate").value = getNowDateStr();
+        const list = await getWarehouse();
+        const count = list.length + 1;
+        document.getElementById("billNo").value =
+          "C" + String(count).padStart(3, "0");
+        const rows = document.querySelectorAll("#goodsBody tr");
+        rows.forEach((tr) => {
+          tr.querySelector(".pname").value = "";
+          tr.querySelector(".pqty").value = "1";
+          tr.querySelector(".pprice").value = "0";
+          tr.querySelector(".ptotal").value = "";
+          tr.querySelector(".premark").value = "";
+        });
+        document.getElementById("totalMoney").value = "";
+        document.getElementById("upperTotal").value = "";
+        document.getElementById("signMakerDisplay").innerText = "____________";
+        document.getElementById("signFactoryDisplay").innerText =
+          "____________";
+        calc();
+      }
+
+      // =============================================================
+      //  11. 初始化
+      // =============================================================
+
+      window.onload = async function () {
+        document.getElementById("billDate").value = getNowDateStr();
+        try {
+          const list = await getWarehouse();
+          const count = list.length + 1;
+          document.getElementById("billNo").value =
+            "C" + String(count).padStart(3, "0");
+        } catch (e) {
+          console.warn("无法获取仓库数据，使用默认编号");
+          document.getElementById("billNo").value = "C001";
+        }
+        calc();
+
+        // 点击弹窗外部关闭
+        document.querySelectorAll(".modal").forEach((modal) => {
+          modal.addEventListener("click", function (e) {
+            if (e.target === this) {
+              this.classList.remove("show");
+            }
+          });
+        });
+
+        console.log("📦 开单系统已加载，后端地址:", API_BASE);
+
+        // 检测横屏/竖屏变化
+        const overlay = document.getElementById("rotate-overlay");
+        const app = document.getElementById("app");
+        function checkOrientation() {
+          if (window.matchMedia("(orientation: portrait)").matches) {
+            overlay.classList.add("show");
+            app.classList.remove("active");
+          } else {
+            overlay.classList.remove("show");
+            app.classList.add("active");
+          }
+        }
+        checkOrientation();
+        window.addEventListener("orientationchange", () => {
+          setTimeout(checkOrientation, 300);
+        });
+        window.addEventListener("resize", checkOrientation);
+      };
+    </script>
+  </body>
+</html>

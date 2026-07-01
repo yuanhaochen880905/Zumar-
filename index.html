@@ -569,14 +569,14 @@
       }
 
       /* ================================================================ */
-      /* ===== 手机横屏全屏适配（隐藏按钮，单据占满全屏） ===== */
+      /* ===== 手机横屏全屏适配 ===== */
       @media (orientation: landscape) and (max-width: 768px) {
         /* 隐藏顶部按钮组 */
         .btn-group {
           display: none !important;
         }
 
-        /* 重置 #app 为 flex 列，去除 padding，占满全屏 */
+        /* 重置 #app 为 flex 列，占满全屏 */
         #app {
           display: flex !important;
           flex-direction: column;
@@ -592,7 +592,7 @@
           width: 100%;
           max-width: 100%;
           margin: 0;
-          padding: 6px 10px 10px;
+          padding: 6px 10px 8px;
           border-radius: 0;
           border: 1px solid #000;
           display: flex;
@@ -607,32 +607,39 @@
           margin-bottom: 2px;
         }
 
-        /* 店铺信息缩小 */
+        /* 店铺信息 → 一行显示 */
         .shop-info {
-          font-size: 11px;
-          margin-bottom: 4px;
+          flex-direction: row !important;
+          justify-content: center;
+          font-size: 10px;
+          margin-bottom: 2px;
+          gap: 6px;
+          flex-wrap: wrap;
           line-height: 1.2;
+        }
+        .shop-left {
+          margin-right: 0;
         }
 
         /* 顶部栏紧凑 */
         .top-bar {
           flex-wrap: nowrap;
           gap: 4px;
-          margin: 4px 0;
-          font-size: 13px;
+          margin: 3px 0;
+          font-size: 12px;
         }
         .top-bar > div {
           flex: 1 1 0;
           min-width: 0;
-          gap: 3px;
+          gap: 2px;
         }
         .top-bar label {
-          min-width: 30px;
-          font-size: 12px;
+          min-width: 26px;
+          font-size: 11px;
         }
         .top-bar input {
-          padding: 4px 4px;
-          font-size: 13px;
+          padding: 3px 4px;
+          font-size: 12px;
           border-width: 1px;
           min-width: 0;
         }
@@ -642,23 +649,26 @@
           flex: 1 1 auto;
           overflow-y: auto;
           overflow-x: auto;
-          margin: 4px 0 2px;
+          margin: 2px 0 2px;
           min-height: 0;
         }
 
         .goods-table {
           min-width: 400px;
-          font-size: 12px;
+          font-size: 11px;
         }
-        .goods-table th,
+        .goods-table th {
+          padding: 2px 2px;
+          font-size: 10px;
+        }
         .goods-table td {
-          padding: 3px 2px;
+          padding: 2px 2px;
           border-width: 1px;
         }
         .goods-table td input {
-          padding: 3px 2px;
-          font-size: 13px;
-          min-width: 30px;
+          padding: 2px 2px;
+          font-size: 12px;
+          min-width: 28px;
         }
 
         /* 合计区域 */
@@ -667,27 +677,27 @@
           flex-direction: row;
           flex-wrap: wrap;
           justify-content: flex-end;
-          gap: 4px 12px;
-          margin: 2px 0;
-          font-size: 13px;
+          gap: 3px 10px;
+          margin: 1px 0;
+          font-size: 12px;
         }
         .total-area input {
-          padding: 3px 6px;
-          font-size: 13px;
-          min-width: 80px;
+          padding: 2px 4px;
+          font-size: 12px;
+          min-width: 70px;
           width: auto;
           flex: 0 1 auto;
         }
 
         .separator {
-          margin: 4px 0;
+          margin: 3px 0;
         }
 
         .remark {
           flex: 0 0 auto;
-          font-size: 10px;
-          margin: 2px 0 3px;
-          line-height: 1.3;
+          font-size: 9px;
+          margin: 1px 0 2px;
+          line-height: 1.2;
         }
 
         .sign-area {
@@ -695,12 +705,12 @@
           flex-direction: row;
           flex-wrap: wrap;
           justify-content: space-between;
-          font-size: 12px;
-          margin-top: 4px;
+          font-size: 11px;
+          margin-top: 2px;
           gap: 2px;
         }
 
-        /* 仓库弹窗内调整（模态框仍可正常使用） */
+        /* 仓库弹窗内调整 */
         .modal-content {
           max-height: 95vh;
         }

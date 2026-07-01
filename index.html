@@ -2,7 +2,6 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover"
@@ -14,7 +13,6 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        -webkit-box-sizing: border-box;
         font-family:
           "Microsoft YaHei",
           -apple-system,
@@ -52,14 +50,12 @@
         padding: 40px;
       }
       #rotate-overlay.show {
-        display: -webkit-flex;
         display: flex;
       }
       #rotate-overlay .icon {
         font-size: 60px;
         margin-bottom: 20px;
         animation: rotate-phone 2s ease-in-out infinite;
-        -webkit-animation: rotate-phone 2s ease-in-out infinite;
       }
       #rotate-overlay h2 {
         font-size: 24px;
@@ -77,15 +73,6 @@
         }
         50% {
           transform: rotate(90deg);
-        }
-      }
-      @-webkit-keyframes rotate-phone {
-        0%,
-        100% {
-          -webkit-transform: rotate(0deg);
-        }
-        50% {
-          -webkit-transform: rotate(90deg);
         }
       }
 
@@ -116,7 +103,6 @@
 
       @media (orientation: portrait) {
         #rotate-overlay {
-          display: -webkit-flex !important;
           display: flex !important;
         }
         #app {
@@ -143,7 +129,6 @@
       }
 
       .shop-info {
-        display: -webkit-flex;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -156,7 +141,6 @@
       }
 
       .top-bar {
-        display: -webkit-flex;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -195,7 +179,6 @@
       }
 
       .total-area {
-        display: -webkit-flex;
         display: flex;
         justify-content: flex-end;
         align-items: center;
@@ -222,7 +205,6 @@
       }
 
       .sign-area {
-        display: -webkit-flex;
         display: flex;
         justify-content: space-between;
         margin-top: 10px;
@@ -266,7 +248,6 @@
         padding: 10px;
       }
       .modal.show {
-        display: -webkit-flex;
         display: flex;
       }
 
@@ -278,15 +259,12 @@
         max-height: 92vh;
         border-radius: 12px;
         overflow: hidden;
-        display: -webkit-flex;
         display: flex;
         flex-direction: column;
         box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-        -webkit-box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
       }
 
       .modal-header {
-        display: -webkit-flex;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -316,7 +294,6 @@
 
       /* ===== 仓库弹窗 ===== */
       .warehouse-search {
-        display: -webkit-flex;
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
@@ -457,7 +434,6 @@
         margin-bottom: 6px;
       }
       .detail-invoice .d-top {
-        display: -webkit-flex;
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
@@ -483,7 +459,6 @@
         white-space: nowrap;
       }
       .detail-invoice .d-total {
-        display: -webkit-flex;
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
@@ -497,7 +472,6 @@
         margin: 4px 0;
       }
       .detail-invoice .d-sign {
-        display: -webkit-flex;
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
@@ -507,7 +481,6 @@
         font-size: 13px;
       }
       .detail-invoice .d-images {
-        display: -webkit-flex;
         display: flex;
         gap: 10px;
         flex-wrap: wrap;
@@ -596,8 +569,8 @@
       }
 
       /* ================================================================ */
-      /* ===== 手机 / 平板横屏全屏适配（宽屏设备不受影响） ===== */
-      @media (orientation: landscape) and (max-width: 1024px) {
+      /* ===== 手机横屏全屏适配（覆盖所有手机，电脑/平板不受影响） ===== */
+      @media (orientation: landscape) and (max-height: 600px) {
         /* 隐藏顶部按钮组 */
         .btn-group {
           display: none !important;
@@ -605,7 +578,6 @@
 
         /* 重置 #app 为 flex 列，占满全屏 */
         #app {
-          display: -webkit-flex !important;
           display: flex !important;
           flex-direction: column;
           padding: 0 !important;
@@ -616,7 +588,6 @@
 
         /* 单据占满剩余空间，使用 flex 列 */
         .invoice {
-          -webkit-flex: 1 1 auto;
           flex: 1 1 auto;
           width: 100%;
           max-width: 100%;
@@ -624,7 +595,6 @@
           padding: 4px 8px 6px;
           border-radius: 0;
           border: 1px solid #000;
-          display: -webkit-flex;
           display: flex;
           flex-direction: column;
           overflow: hidden;
@@ -639,7 +609,6 @@
 
         /* 店铺信息 → 强制一行显示 */
         .shop-info {
-          -webkit-flex-direction: row !important;
           flex-direction: row !important;
           justify-content: center;
           font-size: 9px;
@@ -660,7 +629,6 @@
           font-size: 11px;
         }
         .top-bar > div {
-          -webkit-flex: 1 1 0;
           flex: 1 1 0;
           min-width: 0;
           gap: 2px;
@@ -678,7 +646,6 @@
 
         /* 表格区域自动伸缩，可滚动 */
         .table-wrap {
-          -webkit-flex: 1 1 auto;
           flex: 1 1 auto;
           overflow-y: auto;
           overflow-x: auto;
@@ -706,7 +673,6 @@
 
         /* 合计区域 */
         .total-area {
-          -webkit-flex: 0 0 auto;
           flex: 0 0 auto;
           flex-direction: row;
           flex-wrap: wrap;
@@ -720,7 +686,6 @@
           font-size: 11px;
           min-width: 60px;
           width: auto;
-          -webkit-flex: 0 1 auto;
           flex: 0 1 auto;
         }
 
@@ -729,7 +694,6 @@
         }
 
         .remark {
-          -webkit-flex: 0 0 auto;
           flex: 0 0 auto;
           font-size: 8px;
           margin: 1px 0 1px;
@@ -737,7 +701,6 @@
         }
 
         .sign-area {
-          -webkit-flex: 0 0 auto;
           flex: 0 0 auto;
           flex-direction: row;
           flex-wrap: wrap;

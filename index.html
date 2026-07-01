@@ -76,7 +76,7 @@
         }
       }
 
-      /* ===== 主容器 ===== */
+      /* ===== 主容器（电脑和竖屏默认） ===== */
       #app {
         display: none;
         width: 100%;
@@ -110,23 +110,22 @@
         }
       }
 
-      /* ===== 单据样式（默认，适用于电脑和竖屏） ===== */
+      /* ===== 单据样式（电脑端和竖屏，恢复最初版） ===== */
       .invoice {
-        width: 100%;
-        max-width: 210mm;
+        width: 210mm;
+        max-width: 100%;
         margin: 0 auto;
         background: white;
-        padding: 12px 14px;
+        padding: 15px 20px;
         border: 1px solid #000;
-        line-height: 1.4;
-        border-radius: 4px;
+        line-height: 1.3;
       }
 
       .invoice-title {
         text-align: center;
-        font-size: 20px;
+        font-size: 22px;
         font-weight: bold;
-        margin-bottom: 6px;
+        margin-bottom: 5px;
       }
 
       .shop-info {
@@ -134,107 +133,63 @@
         flex-direction: column;
         align-items: center;
         font-size: 14px;
-        margin-bottom: 8px;
+        margin-bottom: 10px;
         flex-wrap: wrap;
-        text-align: center;
+      }
+      .shop-left {
+        margin-right: 1em;
       }
 
       .top-bar {
         display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin: 10px 0;
-        font-size: 16px;
-      }
-      .top-bar > div {
-        display: flex;
+        justify-content: space-between;
         align-items: center;
-        gap: 6px;
-        flex: 1 0 30%;
-        min-width: 140px;
-      }
-      .top-bar label {
-        min-width: 50px;
-        font-weight: 500;
-        flex-shrink: 0;
+        margin: 10px 0;
+        font-size: 15px;
+        flex-wrap: wrap;
+        gap: 10px;
       }
       .top-bar input {
-        flex: 1;
-        padding: 8px 10px;
-        font-size: 16px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        min-width: 0;
-        width: 100%;
-        background: white;
+        padding: 4px 6px;
+        width: 140px;
       }
-
-      .table-wrap {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        margin: 10px 0;
+      .top-bar div:nth-child(2) {
+        margin-left: -20px;
       }
 
       .goods-table {
         width: 100%;
-        min-width: 520px;
         border-collapse: collapse;
+        margin: 10px 0;
         font-size: 14px;
       }
       .goods-table th,
       .goods-table td {
         border: 1px solid #000;
-        padding: 6px 4px;
+        padding: 6px;
         text-align: center;
-        white-space: nowrap;
-      }
-      .goods-table th {
-        background: #f0f0f0;
-        font-weight: 600;
       }
       .goods-table td input {
         width: 100%;
-        min-width: 50px;
         border: none;
         outline: none;
         text-align: center;
-        padding: 6px 2px;
+        padding: 2px;
         background: transparent;
-        font-size: 16px;
-      }
-      .goods-table td input[type="number"] {
-        -moz-appearance: textfield;
-      }
-      .goods-table td input::-webkit-outer-spin-button,
-      .goods-table td input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
       }
 
       .total-area {
         display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
         justify-content: flex-end;
-        gap: 12px;
-        margin: 8px 0 0;
-        font-size: 16px;
-      }
-      .total-area > div {
-        display: flex;
         align-items: center;
-        gap: 6px;
+        margin: 2px 0 0;
+        font-size: 15px;
+        gap: 10px;
         flex-wrap: wrap;
       }
       .total-area input {
-        flex: 1;
-        padding: 8px 10px;
-        font-size: 16px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        background: #f9f9f9;
-        min-width: 120px;
+        padding: 4px 6px;
+        width: 160px;
       }
 
       .separator {
@@ -244,55 +199,41 @@
       }
 
       .remark {
-        font-size: 12px;
-        margin: 6px 0 8px;
+        font-size: 11px;
+        margin: 0 0 8px;
         line-height: 1.5;
       }
 
       .sign-area {
         display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
         justify-content: space-between;
-        gap: 6px;
         margin-top: 10px;
-        font-size: 16px;
+        font-size: 14px;
       }
 
-      /* ===== 按钮区 ===== */
+      /* ===== 按钮区（电脑端） ===== */
       .btn-group {
         text-align: center;
-        margin: 12px 0 16px;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
+        margin: 20px 0;
       }
       .btn-group button {
-        padding: 12px 22px;
-        font-size: 18px;
-        flex: 1 0 auto;
-        min-width: 100px;
-        max-width: 160px;
+        padding: 10px 20px;
+        font-size: 16px;
+        margin: 0 8px 8px 8px;
         background: #2563eb;
         color: white;
         border: none;
-        border-radius: 8px;
+        border-radius: 4px;
         cursor: pointer;
-        touch-action: manipulation;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        transition: background 0.2s;
-        font-weight: 500;
       }
-      .btn-group button:active {
-        opacity: 0.7;
-        transform: scale(0.97);
+      .btn-group button:hover {
+        background: #1d4ed8;
       }
       .btn-group button.btn-warehouse {
         background: #16a34a;
       }
 
-      /* ===== 模态框（不变） ===== */
+      /* ===== 模态框（通用，不改） ===== */
       .modal {
         position: fixed;
         top: 0;
@@ -628,9 +569,14 @@
       }
 
       /* ================================================================ */
-      /* ===== 手机横屏全屏适配（仅对小屏横屏生效） ===== */
+      /* ===== 手机横屏全屏适配（隐藏按钮，单据占满全屏） ===== */
       @media (orientation: landscape) and (max-width: 768px) {
-        /* 重置 #app 为 flex 列，去除 padding */
+        /* 隐藏顶部按钮组 */
+        .btn-group {
+          display: none !important;
+        }
+
+        /* 重置 #app 为 flex 列，去除 padding，占满全屏 */
         #app {
           display: flex !important;
           flex-direction: column;
@@ -640,23 +586,7 @@
           width: 100vw !important;
         }
 
-        /* 按钮组缩小并固定高度 */
-        .btn-group {
-          flex: 0 0 auto;
-          margin: 4px 0 6px;
-          gap: 6px;
-          padding: 0 6px;
-          justify-content: center;
-        }
-        .btn-group button {
-          padding: 6px 12px;
-          font-size: 14px;
-          min-width: 60px;
-          max-width: 120px;
-          border-radius: 6px;
-        }
-
-        /* 单据占满剩余空间 */
+        /* 单据占满剩余空间，使用 flex 列 */
         .invoice {
           flex: 1 1 auto;
           width: 100%;
@@ -770,7 +700,7 @@
           gap: 2px;
         }
 
-        /* 仓库弹窗等不受影响，但模态框内调整 */
+        /* 仓库弹窗内调整（模态框仍可正常使用） */
         .modal-content {
           max-height: 95vh;
         }
@@ -793,11 +723,6 @@
           padding: 4px 8px;
         }
       }
-
-      /* 横屏但屏幕较大（如平板）保持原样 */
-      @media (orientation: landscape) and (min-width: 769px) {
-        /* 恢复默认样式，不做特殊处理 */
-      }
     </style>
   </head>
   <body>
@@ -810,7 +735,7 @@
 
     <!-- ===== 主应用 ===== -->
     <div id="app">
-      <!-- ===== 按钮区 ===== -->
+      <!-- ===== 按钮区（电脑端显示，手机横屏隐藏） ===== -->
       <div class="btn-group">
         <button onclick="doPrint()">🖨️ 打印</button>
         <button onclick="resetInvoice()">🗑️ 清空</button>
@@ -861,36 +786,106 @@
             <tbody id="goodsBody">
               <tr>
                 <td><input type="text" class="pname" placeholder="" /></td>
-                <td><input type="number" class="pqty" value="1" oninput="calc()" /></td>
-                <td><input type="number" class="pprice" value="0" oninput="calc()" /></td>
+                <td>
+                  <input
+                    type="number"
+                    class="pqty"
+                    value="1"
+                    oninput="calc()"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    class="pprice"
+                    value="0"
+                    oninput="calc()"
+                  />
+                </td>
                 <td><input type="text" class="ptotal" readonly /></td>
                 <td><input type="text" class="premark" /></td>
               </tr>
               <tr>
                 <td><input type="text" class="pname" placeholder="" /></td>
-                <td><input type="number" class="pqty" value="1" oninput="calc()" /></td>
-                <td><input type="number" class="pprice" value="0" oninput="calc()" /></td>
+                <td>
+                  <input
+                    type="number"
+                    class="pqty"
+                    value="1"
+                    oninput="calc()"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    class="pprice"
+                    value="0"
+                    oninput="calc()"
+                  />
+                </td>
                 <td><input type="text" class="ptotal" readonly /></td>
                 <td><input type="text" class="premark" /></td>
               </tr>
               <tr>
                 <td><input type="text" class="pname" placeholder="" /></td>
-                <td><input type="number" class="pqty" value="1" oninput="calc()" /></td>
-                <td><input type="number" class="pprice" value="0" oninput="calc()" /></td>
+                <td>
+                  <input
+                    type="number"
+                    class="pqty"
+                    value="1"
+                    oninput="calc()"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    class="pprice"
+                    value="0"
+                    oninput="calc()"
+                  />
+                </td>
                 <td><input type="text" class="ptotal" readonly /></td>
                 <td><input type="text" class="premark" /></td>
               </tr>
               <tr>
                 <td><input type="text" class="pname" placeholder="" /></td>
-                <td><input type="number" class="pqty" value="1" oninput="calc()" /></td>
-                <td><input type="number" class="pprice" value="0" oninput="calc()" /></td>
+                <td>
+                  <input
+                    type="number"
+                    class="pqty"
+                    value="1"
+                    oninput="calc()"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    class="pprice"
+                    value="0"
+                    oninput="calc()"
+                  />
+                </td>
                 <td><input type="text" class="ptotal" readonly /></td>
                 <td><input type="text" class="premark" /></td>
               </tr>
               <tr>
                 <td><input type="text" class="pname" placeholder="" /></td>
-                <td><input type="number" class="pqty" value="1" oninput="calc()" /></td>
-                <td><input type="number" class="pprice" value="0" oninput="calc()" /></td>
+                <td>
+                  <input
+                    type="number"
+                    class="pqty"
+                    value="1"
+                    oninput="calc()"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    class="pprice"
+                    value="0"
+                    oninput="calc()"
+                  />
+                </td>
                 <td><input type="text" class="ptotal" readonly /></td>
                 <td><input type="text" class="premark" /></td>
               </tr>
@@ -932,21 +927,36 @@
         </div>
         <div class="modal-body">
           <div class="warehouse-search">
-            <input type="text" id="warehouseSearch" placeholder="🔍 搜索编号 / 顾客 / 日期..." oninput="renderWarehouse()" />
+            <input
+              type="text"
+              id="warehouseSearch"
+              placeholder="🔍 搜索编号 / 顾客 / 日期..."
+              oninput="renderWarehouse()"
+            />
             <select id="yearFilter" onchange="renderWarehouse()">
               <option value="">全部年份</option>
             </select>
             <select id="monthFilter" onchange="renderWarehouse()">
               <option value="">全部月份</option>
-              <option value="1">1月</option><option value="2">2月</option>
-              <option value="3">3月</option><option value="4">4月</option>
-              <option value="5">5月</option><option value="6">6月</option>
-              <option value="7">7月</option><option value="8">8月</option>
-              <option value="9">9月</option><option value="10">10月</option>
-              <option value="11">11月</option><option value="12">12月</option>
+              <option value="1">1月</option>
+              <option value="2">2月</option>
+              <option value="3">3月</option>
+              <option value="4">4月</option>
+              <option value="5">5月</option>
+              <option value="6">6月</option>
+              <option value="7">7月</option>
+              <option value="8">8月</option>
+              <option value="9">9月</option>
+              <option value="10">10月</option>
+              <option value="11">11月</option>
+              <option value="12">12月</option>
             </select>
-            <button class="upload-btn" onclick="uploadImageToWarehouse()">📷 上传图片</button>
-            <span class="search-hint">共 <span id="totalCount">0</span> 条</span>
+            <button class="upload-btn" onclick="uploadImageToWarehouse()">
+              📷 上传图片
+            </button>
+            <span class="search-hint"
+              >共 <span id="totalCount">0</span> 条</span
+            >
           </div>
           <div class="warehouse-table-wrap">
             <div id="warehouseList"></div>
@@ -975,17 +985,58 @@
         </div>
         <div class="modal-body">
           <label>店铺名称：</label>
-          <input type="text" id="setShopName" value="广州优玛商贸商行(销售单)" />
+          <input
+            type="text"
+            id="setShopName"
+            value="广州优玛商贸商行(销售单)"
+          />
 
           <label>广州店信息：</label>
-          <input type="text" id="setLeft" value="广州店：广州南沙环盛街2号, 电话：020-81335099,手机：13360559947" />
+          <input
+            type="text"
+            id="setLeft"
+            value="广州店：广州南沙环盛街2号, 电话：020-81335099,手机：13360559947"
+          />
 
           <label>仓库/分店信息：</label>
-          <input type="text" id="setRight" value="仓库：广州市海珠区中大外围开发区0506档, 手机：19320546394" />
+          <input
+            type="text"
+            id="setRight"
+            value="仓库：广州市海珠区中大外围开发区0506档, 手机：19320546394"
+          />
 
           <br />
-          <button onclick="saveSetting()" style="background:#2563eb;color:#fff;border:none;padding:10px 28px;border-radius:6px;cursor:pointer;font-size:16px;touch-action:manipulation;">保存</button>
-          <button onclick="closeSetting()" style="background:#9ca3af;color:#fff;border:none;padding:10px 28px;border-radius:6px;cursor:pointer;font-size:16px;margin-left:8px;touch-action:manipulation;">取消</button>
+          <button
+            onclick="saveSetting()"
+            style="
+              background: #2563eb;
+              color: #fff;
+              border: none;
+              padding: 10px 28px;
+              border-radius: 6px;
+              cursor: pointer;
+              font-size: 16px;
+              touch-action: manipulation;
+            "
+          >
+            保存
+          </button>
+          <button
+            onclick="closeSetting()"
+            style="
+              background: #9ca3af;
+              color: #fff;
+              border: none;
+              padding: 10px 28px;
+              border-radius: 6px;
+              cursor: pointer;
+              font-size: 16px;
+              margin-left: 8px;
+              touch-action: manipulation;
+            "
+          >
+            取消
+          </button>
         </div>
       </div>
     </div>
@@ -1005,9 +1056,20 @@
         if (amount === 0 || isNaN(amount) || amount === "") return "零元整";
         const n = Math.floor(Number(amount));
         if (n === 0) return "零元整";
-        const digits = ["零","壹","贰","叁","肆","伍","陆","柒","捌","玖"];
-        const units = ["","拾","佰","仟"];
-        const bigUnits = ["","万","亿"];
+        const digits = [
+          "零",
+          "壹",
+          "贰",
+          "叁",
+          "肆",
+          "伍",
+          "陆",
+          "柒",
+          "捌",
+          "玖",
+        ];
+        const units = ["", "拾", "佰", "仟"];
+        const bigUnits = ["", "万", "亿"];
         let str = n.toString();
         let groups = [];
         while (str.length > 0) {
@@ -1044,13 +1106,21 @@
       }
 
       function genId() {
-        return Date.now().toString(36) + "-" + Math.random().toString(36).substr(2, 6);
+        return (
+          Date.now().toString(36) +
+          "-" +
+          Math.random().toString(36).substr(2, 6)
+        );
       }
 
       function escapeHtml(str) {
         if (!str) return "";
-        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        return str
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
       }
 
       // =============================================================
@@ -1101,8 +1171,12 @@
           totalMoney: document.getElementById("totalMoney").value || "0",
           upperTotal: document.getElementById("upperTotal").value || "零元整",
           remark: document.getElementById("remarkText").innerText || "",
-          signMaker: document.getElementById("signMakerDisplay").innerText || "____________",
-          signFactory: document.getElementById("signFactoryDisplay").innerText || "____________",
+          signMaker:
+            document.getElementById("signMakerDisplay").innerText ||
+            "____________",
+          signFactory:
+            document.getElementById("signFactoryDisplay").innerText ||
+            "____________",
           createTime: new Date().toISOString(),
           images: [],
         };
@@ -1131,7 +1205,9 @@
       }
 
       async function deleteFromWarehouse(id) {
-        const res = await fetch(API_BASE + "/invoices/" + id, { method: "DELETE" });
+        const res = await fetch(API_BASE + "/invoices/" + id, {
+          method: "DELETE",
+        });
         if (!res.ok) throw new Error("删除失败");
         renderWarehouse();
       }
@@ -1206,12 +1282,15 @@
           try {
             const emptyInvoice = {
               id: genId(),
-              shopName: document.getElementById("shopName").innerText || "图片上传",
+              shopName:
+                document.getElementById("shopName").innerText || "图片上传",
               shopLeft: document.getElementById("shopLeft").innerText || "",
               shopRight: document.getElementById("shopRight").innerText || "",
               customer: "图片上传",
               billDate: getNowDateStr(),
-              billNo: "IMG-" + new Date().toISOString().slice(0,10).replace(/-/g,""),
+              billNo:
+                "IMG-" +
+                new Date().toISOString().slice(0, 10).replace(/-/g, ""),
               goods: [],
               totalMoney: "0",
               upperTotal: "零元整",
@@ -1225,22 +1304,30 @@
             for (let file of files) {
               const formData = new FormData();
               formData.append("image", file);
-              const uploadRes = await fetch("http://localhost:3000/api/upload", {
-                method: "POST",
-                body: formData,
-              });
+              const uploadRes = await fetch(
+                "http://localhost:3000/api/upload",
+                {
+                  method: "POST",
+                  body: formData,
+                },
+              );
               if (!uploadRes.ok) throw new Error(`上传 ${file.name} 失败`);
               const result = await uploadRes.json();
-              const invoiceRes = await fetch(API_BASE + "/invoices/" + saved.id);
+              const invoiceRes = await fetch(
+                API_BASE + "/invoices/" + saved.id,
+              );
               if (!invoiceRes.ok) throw new Error("获取单据失败");
               const invoice = await invoiceRes.json();
               if (!invoice.images) invoice.images = [];
               invoice.images.push(result.path);
-              const updateRes = await fetch(API_BASE + "/invoices/" + saved.id, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(invoice),
-              });
+              const updateRes = await fetch(
+                API_BASE + "/invoices/" + saved.id,
+                {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(invoice),
+                },
+              );
               if (!updateRes.ok) throw new Error("更新单据失败");
             }
             alert(`✅ 成功上传 ${files.length} 张图片到仓库！`);
@@ -1257,7 +1344,10 @@
       // =============================================================
 
       async function renderWarehouse() {
-        const keyword = document.getElementById("warehouseSearch").value.trim().toLowerCase();
+        const keyword = document
+          .getElementById("warehouseSearch")
+          .value.trim()
+          .toLowerCase();
         const year = document.getElementById("yearFilter").value;
         const month = document.getElementById("monthFilter").value;
 
@@ -1269,7 +1359,12 @@
             const cus = (item.customer || "").toLowerCase();
             const date = (item.billDate || "").toLowerCase();
             const remark = (item.remark || "").toLowerCase();
-            return no.includes(keyword) || cus.includes(keyword) || date.includes(keyword) || remark.includes(keyword);
+            return (
+              no.includes(keyword) ||
+              cus.includes(keyword) ||
+              date.includes(keyword) ||
+              remark.includes(keyword)
+            );
           });
         }
 
@@ -1417,9 +1512,12 @@
       // =============================================================
 
       function openSetting() {
-        document.getElementById("setShopName").value = document.getElementById("shopName").innerText;
-        document.getElementById("setLeft").value = document.getElementById("shopLeft").innerText;
-        document.getElementById("setRight").value = document.getElementById("shopRight").innerText;
+        document.getElementById("setShopName").value =
+          document.getElementById("shopName").innerText;
+        document.getElementById("setLeft").value =
+          document.getElementById("shopLeft").innerText;
+        document.getElementById("setRight").value =
+          document.getElementById("shopRight").innerText;
         document.getElementById("settingModal").classList.add("show");
       }
 
@@ -1428,9 +1526,13 @@
       }
 
       function saveSetting() {
-        document.getElementById("shopName").innerText = document.getElementById("setShopName").value || "广州优玛商贸商行(销售单)";
-        document.getElementById("shopLeft").innerText = document.getElementById("setLeft").value || "";
-        document.getElementById("shopRight").innerText = document.getElementById("setRight").value || "";
+        document.getElementById("shopName").innerText =
+          document.getElementById("setShopName").value ||
+          "广州优玛商贸商行(销售单)";
+        document.getElementById("shopLeft").innerText =
+          document.getElementById("setLeft").value || "";
+        document.getElementById("shopRight").innerText =
+          document.getElementById("setRight").value || "";
         closeSetting();
       }
 
@@ -1464,7 +1566,8 @@
         document.getElementById("billDate").value = getNowDateStr();
         const list = await getWarehouse();
         const count = list.length + 1;
-        document.getElementById("billNo").value = "C" + String(count).padStart(3, "0");
+        document.getElementById("billNo").value =
+          "C" + String(count).padStart(3, "0");
         const rows = document.querySelectorAll("#goodsBody tr");
         rows.forEach((tr) => {
           tr.querySelector(".pname").value = "";
@@ -1476,7 +1579,8 @@
         document.getElementById("totalMoney").value = "";
         document.getElementById("upperTotal").value = "";
         document.getElementById("signMakerDisplay").innerText = "____________";
-        document.getElementById("signFactoryDisplay").innerText = "____________";
+        document.getElementById("signFactoryDisplay").innerText =
+          "____________";
         calc();
       }
 
@@ -1489,7 +1593,8 @@
         try {
           const list = await getWarehouse();
           const count = list.length + 1;
-          document.getElementById("billNo").value = "C" + String(count).padStart(3, "0");
+          document.getElementById("billNo").value =
+            "C" + String(count).padStart(3, "0");
         } catch (e) {
           console.warn("无法获取仓库数据，使用默认编号");
           document.getElementById("billNo").value = "C001";
